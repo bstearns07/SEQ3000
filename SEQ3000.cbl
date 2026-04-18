@@ -33,11 +33,11 @@
 
            05  NM-EMPLOYEE-ID              PIC X(5).
            05  NM-EMPLOYEE-NAME            PIC X(30).
-           05  NM-DEPART-CODE              PIC X(10).
+           05  NM-DEPART-CODE              PIC X(5).
            05  NM-JOB-CLASS                PIC X(2).
-           05  NM-ANNUAL-SALARY            PIC S9(5)V99.
-           05  NM-VACATION-HOURS           PIC S9(3).
-           05  NM-SICK-HOURS               PIC S9(3)V99.
+           05  NM-ANNUAL-SALARY            PIC 9(5)V99.
+           05  NM-VACATION-HOURS           PIC 9(3).
+           05  NM-SICK-HOURS               PIC 9(3)V99.
 
        FD     ERRTRAN.
 
@@ -71,16 +71,16 @@
                  10  ET-EMPLOYEE-NAME            PIC X(30).
                  10  ET-DEPART-CODE              PIC X(5).
                  10  ET-JOB-CLASS                PIC X(2).
-                 10  ET-ANNUAL-SALARY            PIC S9(5)V99.
+                 10  ET-ANNUAL-SALARY            PIC 9(5)V99.
 
        01  EMPLOYEE-MASTER-RECORD.
            05  EM-EMPLOYEE-ID              PIC X(5).
            05  EM-EMPLOYEE-NAME            PIC X(30).
-           05  EM-DEPART-CODE              PIC X(10).
+           05  EM-DEPART-CODE              PIC X(5).
            05  EM-JOB-CLASS                PIC X(2).
-           05  EM-ANNUAL-SALARY            PIC S9(5)V99.
-           05  EM-VACATION-HOURS           PIC S9(3).
-           05  EM-SICK-HOURS               PIC S9(3)V99.
+           05  EM-ANNUAL-SALARY            PIC 9(5)V99.
+           05  EM-VACATION-HOURS           PIC 9(3).
+           05  EM-SICK-HOURS               PIC 9(3)V99.
 
        PROCEDURE DIVISION.
 
@@ -99,6 +99,12 @@
            STOP RUN.
 
        300-MAINTAIN-EMPLOYEE-RECORD.
+      *    Wipe any old data from the master record buffer
+           MOVE SPACES TO NEW-MASTER-RECORD
+           MOVE ZEROS  TO NM-ANNUAL-SALARY
+                          NM-VACATION-HOURS
+                          NM-SICK-HOURS
+
       *    READ IN EMPTRAN RECORD
            IF NEED-TRANSACTION
                PERFORM 310-READ-INVENTORY-TRANSACTION
@@ -122,13 +128,13 @@
 
            READ OLDEMP INTO EMPLOYEE-MASTER-RECORD
                AT END
-                   MOVE HIGH-VALUE TO NM-EMPLOYEE-ID.
+                   MOVE HIGH-VALUES TO EM-EMPLOYEE-ID.
 
        330-MATCH-MASTER-TRAN.
 
-           IF NM-EMPLOYEE-ID > ET-EMPLOYEE-ID
+           IF EM-EMPLOYEE-ID > ET-EMPLOYEE-ID
                PERFORM 350-PROCESS-HI-MASTER
-           ELSE IF NM-EMPLOYEE-ID < ET-EMPLOYEE-ID
+           ELSE IF EM-EMPLOYEE-ID < ET-EMPLOYEE-ID
                PERFORM 360-PROCESS-LO-MASTER
            ELSE
                PERFORM 370-PROCESS-MAST-TRAN-EQUAL.
@@ -151,13 +157,21 @@
 
        360-PROCESS-LO-MASTER.
 
-           MOVE EMPLOYEE-MASTER-RECORD TO NEW-MASTER-RECORD.
+           MOVE SPACES TO NEW-MASTER-RECORD
+
+           MOVE EM-EMPLOYEE-ID       TO NM-EMPLOYEE-ID
+           MOVE EM-EMPLOYEE-NAME     TO NM-EMPLOYEE-NAME
+           MOVE EM-DEPART-CODE       TO NM-DEPART-CODE
+           MOVE EM-JOB-CLASS         TO NM-JOB-CLASS
+           MOVE EM-ANNUAL-SALARY     TO NM-ANNUAL-SALARY
+           MOVE EM-VACATION-HOURS    TO NM-VACATION-HOURS
+           MOVE EM-SICK-HOURS        TO NM-SICK-HOURS
            SET WRITE-MASTER TO TRUE.
            SET NEED-MASTER TO TRUE.
 
        370-PROCESS-MAST-TRAN-EQUAL.
       *    CHECK IF AT END OF FILE
-           IF NM-EMPLOYEE-ID = HIGH-VALUES
+           IF EM-EMPLOYEE-ID = HIGH-VALUES
                SET ALL-RECORDS-PROCESSED TO TRUE
            ELSE
                IF DELETE-RECORD
@@ -170,13 +184,13 @@
 
        380-APPLY-ADD-TRANSACTION.
 
-           MOVE EM-EMPLOYEE-ID TO NM-EMPLOYEE-ID.
-           MOVE EM-EMPLOYEE-NAME TO NM-EMPLOYEE-NAME.
-           MOVE EM-DEPART-CODE TO NM-DEPART-CODE.
-           MOVE EM-JOB-CLASS TO NM-JOB-CLASS.
-           MOVE EM-ANNUAL-SALARY TO NM-ANNUAL-SALARY.
-      *     MOVE ZERO TO NM-ON-HAND
-      *                  NM-ON-ORDER.
+           MOVE ET-EMPLOYEE-ID TO NM-EMPLOYEE-ID.
+           MOVE ET-EMPLOYEE-NAME TO NM-EMPLOYEE-NAME.
+           MOVE ET-DEPART-CODE TO NM-DEPART-CODE.
+           MOVE ET-JOB-CLASS TO NM-JOB-CLASS.
+           MOVE ET-ANNUAL-SALARY TO NM-ANNUAL-SALARY.
+           MOVE ZERO TO NM-VACATION-HOURS.
+           MOVE ZERO TO NM-SICK-HOURS.
            SET WRITE-MASTER TO TRUE.
            SET NEED-TRANSACTION TO TRUE.
 
@@ -203,7 +217,7 @@
                MOVE EM-EMPLOYEE-NAME TO NM-EMPLOYEE-NAME.
            IF EM-DEPART-CODE NOT = ZERO
                MOVE EM-DEPART-CODE TO NM-DEPART-CODE.
-           IF EM-JOB-CLASS NOT = ZERO
+           IF EM-JOB-CLASS NOT = SPACE
                MOVE EM-JOB-CLASS TO NM-JOB-CLASS.
            IF EM-ANNUAL-SALARY NOT = ZERO
                MOVE EM-ANNUAL-SALARY  TO NM-ANNUAL-SALARY.
