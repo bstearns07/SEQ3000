@@ -65,7 +65,8 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 | Vacation Hours       | EM-VACATION-HOURS   | 9(3)         | 3      | Accrued vacation hours              |
 | Sick Hours           | EM-SICK-HOURS       | 9(3)V99      | 5      | Accrued sick hours (2 decimals)     |
 
-*Total Record Length: 57 bytes*
+*Total Record Length: 50 bytes*
+
 ---
 
 
@@ -81,6 +82,7 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 | Annual Salary        | ET-ANNUAL-SALARY    | 9(5)V99      | 7      | Updated salary (2 implied decimals)         |
 
 *Total Record Length: 50 bytes*
+
 ---
 
 ### 🧾 New Master File Layout (NEW-MASTER-RECORD)
