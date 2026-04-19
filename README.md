@@ -10,10 +10,10 @@ Ben Stearns - [@bstearns07](https://github.com/bstearns07)<br>
 ## 📑 Table of Contents
 - [📌 Summary](#-summary)
 - [✨ Features](#-features)
-- [⚙️ How It Works](#-how-it-works)
-- [🧾 File Layouts](#-file-layouts)
+- [How It Works](#how-it-works)
+- [File Layouts](#file-layouts)
 - [🧰 Tech Stack](#-tech-stack)
-- [🧠 New Topics Covered](#-topics-covered)
+- [🧠 New Topics Covered](#-new-topics-covered)
 - [📘 What I Learned](#-what-i-learned)
 - [🖼 Screenshots](#-screenshots)
 
@@ -42,7 +42,7 @@ For full program details, refer to [Program Requirements](./assets/Assignment_In
 - Record matching logic to properly match an old record with a transaction record
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 1. Upload the repository's associated .cbl, .jcl, and Input_Data files to your mainframe environment
 2. Modify the DSN name of all files to match the filepath to where they are in your environment
@@ -130,9 +130,13 @@ It's also very important to keep your variables straight when working with multi
 
 ## 🖼 Screenshots
 ### Old Master File
+![Old Master File](assets/old.png)
 
 ### New Master File
+![New Master File](assets/new.png)
 
 ### Transaction File
+![Transaction File](assets/transaction.png)
 
 ### Error File
+![Error File](assets/error.png)
