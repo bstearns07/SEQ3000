@@ -29,7 +29,7 @@ Here we have 3 input data files and 1 error log file:
 3. EMPTRAN: the instruction on what changes to make (has intentially bad instructions to test that error logging works)
 4. ERRTRAN3: displays any errors that occurred during the update process
 
-For full program details, refer to [Program Requirements](./assets/Assignment_Instruction.pdf) 
+For full program details, refer to [Program Requirements](./assets/AssignmentInstructions.pdf) 
 
 ---
 
