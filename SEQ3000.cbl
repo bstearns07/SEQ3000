@@ -1,3 +1,15 @@
+      *****************************************************************
+      * Title..........: SEQ3000 - Employee Maintenance
+      * Programmer.....: Ben Stearns
+      * Date...........: 4-20-26
+      * GitHub URL.....: https://github.com/bstearns07/SEQ3000
+      * Program Desc...: Updates an old employee master file depicting
+      *                  employee information using Add/Change/Delete
+      *                  transactions, then writes the updated information
+      *                  into a new master file
+      * File Desc......: Define the sole source code for application
+      ***************************************************************** 
+       
        IDENTIFICATION DIVISION.
 
        PROGRAM-ID.  SEQ3000.
@@ -84,6 +96,12 @@
 
        PROCEDURE DIVISION.
 
+      ******************************************************************
+      *    Main processing loop. Opens the all input/output files, then
+      *    repeatedly calls the employee record maintenance routine til
+      *    all records have been processed. Finally, closes all files &
+      *    terminates the program.
+      ******************************************************************
        000-MAINTAIN-INVENTORY-FILE.
 
            OPEN INPUT  OLDEMP
@@ -98,6 +116,14 @@
                  ERRTRAN.
            STOP RUN.
 
+      ******************************************************************
+      *    Initializes the master record for reading in input file info,
+      *    then reads in the next transaction and master record as 
+      *    needed, checks for a match, and either applies the 
+      *    transaction to the read-in variables or keeps the master
+      *    record as is. Finally, writes out the new master record once
+      *    functions are complete.
+      ******************************************************************
        300-MAINTAIN-EMPLOYEE-RECORD.
       *    Wipe any old data from the master record buffer
            MOVE SPACES TO NEW-MASTER-RECORD
@@ -118,18 +144,34 @@
                PERFORM 340-WRITE-NEW-MASTER
                MOVE "N" TO WRITE-MASTER-SWITCH.
 
+      *****************************************************************
+      *    Reads in the next transaction record from the transaction
+      *    file. If at end of file, sets the employee ID field to high
+      *    values to represents all transactions have been processed
+      *****************************************************************
        310-READ-INVENTORY-TRANSACTION.
 
            READ EMPTRAN INTO EMPLOYEE-TRANSACTION
                AT END
                    MOVE HIGH-VALUE TO    ET-EMPLOYEE-ID.
 
+      *****************************************************************
+      *    Reads in the next master record from the old master file. If
+      *    at end of file, sets the employee ID field to high values to
+      *    represents all master records have been processed
+      *****************************************************************
        320-READ-OLD-MASTER.
 
            READ OLDEMP INTO EMPLOYEE-MASTER-RECORD
                AT END
                    MOVE HIGH-VALUES TO EM-EMPLOYEE-ID.
-
+      
+      *****************************************************************
+      *    Compares the employee ID fields of the transaction and master
+      *    records to determine if the transaction should be applied to
+      *    the master record, if the master record should be written as
+      *    is, or if the transaction should be written to the error file
+      *****************************************************************
        330-MATCH-MASTER-TRAN.
 
            IF EM-EMPLOYEE-ID > ET-EMPLOYEE-ID
@@ -139,6 +181,11 @@
            ELSE
                PERFORM 370-PROCESS-MAST-TRAN-EQUAL.
 
+      *****************************************************************
+      *    Writes out the new master record to the new master file. If a
+      *    write error occurs, writes out the transaction to the error
+      *    file and sets the switch to end processing of all records
+      *****************************************************************
        340-WRITE-NEW-MASTER.
 
            WRITE NEW-MASTER-RECORD.
@@ -148,6 +195,14 @@
                DISPLAY "FILE STATUS CODE IS " NEWMAST-FILE-STATUS
                SET ALL-RECORDS-PROCESSED TO TRUE.
 
+      *****************************************************************
+      *    If the master record employee ID is higher than the 
+      *    transaction record employee ID, then the transaction record 
+      *    has no master record. Checks to see if the transaction is an
+      *    add operation, and if so adds the transaction to the new
+      *    master record. If not, writes the transaction to the error
+      *    file
+      *****************************************************************
        350-PROCESS-HI-MASTER.
 
            IF ADD-RECORD
@@ -155,6 +210,13 @@
            ELSE
                PERFORM 390-WRITE-ERROR-TRANSACTION.
 
+      *****************************************************************
+      *    If the master record employee ID is lower than the 
+      *    transaction record employee ID, then the master record has 
+      *    no transaction record. Writes the master record to the new 
+      *    master file as is, then sets the switch to read in the next 
+      *    master record on the next loop through
+      *****************************************************************
        360-PROCESS-LO-MASTER.
 
            MOVE SPACES TO NEW-MASTER-RECORD
@@ -168,6 +230,13 @@
            SET WRITE-MASTER TO TRUE.
            SET NEED-MASTER TO TRUE.
 
+      *****************************************************************
+      *    If read-in employee ID is HIGH VALUES, all transactions have
+      *    been processed, so sets the switch to end processing of all
+      *    records. If not, checks to see if the transaction is a delete
+      *    or change, and performs the appropriate processing. If 
+      *    neither applies, writes the transaction to the error file
+      *****************************************************************
        370-PROCESS-MAST-TRAN-EQUAL.
       *    CHECK IF AT END OF FILE
            IF EM-EMPLOYEE-ID = HIGH-VALUES
@@ -181,6 +250,12 @@
                    ELSE
                        PERFORM 390-WRITE-ERROR-TRANSACTION.
 
+      *****************************************************************
+      *    If the transaction is an add transaction, moves the 
+      *    transaction fields to the new master record fields, sets the 
+      *    vacation and sick hours to zero, and sets the switch to write
+      *    out the new master and get the next transaction record
+      *****************************************************************
        380-APPLY-ADD-TRANSACTION.
 
            MOVE ET-EMPLOYEE-ID TO NM-EMPLOYEE-ID.
@@ -193,6 +268,13 @@
            SET WRITE-MASTER TO TRUE.
            SET NEED-TRANSACTION TO TRUE.
 
+      *****************************************************************
+      *    If the transaction is an invalid transaction (not an add
+      *    transaction with a high master record, not a delete or change
+      *    transaction with an equal master record), writes the 
+      *    transaction to the error file and sets the switch to end 
+      *    processing of all records
+      *****************************************************************
        390-WRITE-ERROR-TRANSACTION.
 
            WRITE ERROR-TRANSACTION FROM EMPLOYEE-TRANSACTION.
@@ -204,12 +286,25 @@
            ELSE
                SET NEED-TRANSACTION TO TRUE.
 
+      *****************************************************************
+      *    If the transaction is a delete transaction, sets the switch 
+      *    to get the next master and transaction records without
+      *    writing anything, effectively deleting the master record 
+      *    from the new master file.
+      *****************************************************************
        400-APPLY-DELETE-TRANSACTION.
 
            SET NEED-MASTER TO TRUE.
            SET NEED-TRANSACTION TO TRUE.
 
-
+      *****************************************************************
+      *    If the transaction is a change transaction, moves the master
+      *    record fields to the new master record fields, then applies
+      *    any changes from the transaction record to the new master 
+      *    record fields. Finally, sets the switch to write out the new
+      *    master record and get the next transaction record on the next
+      *    loop through
+      *****************************************************************
        410-APPLY-CHANGE-TRANSACTION.
 
       *    copy existing master record to new master record
@@ -219,7 +314,7 @@
            MOVE EM-JOB-CLASS         TO NM-JOB-CLASS
            MOVE EM-ANNUAL-SALARY     TO NM-ANNUAL-SALARY
            MOVE EM-VACATION-HOURS    TO NM-VACATION-HOURS
-           MOVE EM-SICK-HOURS        TO NM-SICK-HOURS 
+           MOVE EM-SICK-HOURS        TO NM-SICK-HOURS
 
       *    apply changes from transaction record to master record
            IF ET-EMPLOYEE-NAME NOT = SPACES
