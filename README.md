@@ -5,17 +5,22 @@
 
 ## 👤 Author
 Ben Stearns - [@bstearns07](https://github.com/bstearns07)<br>
+
+📅 Date: 4/23/2026
+
 ---
 
 ## 📑 Table of Contents
-- [📌 Summary](#-summary)
-- [✨ Features](#-features)
-- [How It Works](#how-it-works)
-- [File Layouts](#file-layouts)
-- [🧰 Tech Stack](#-tech-stack)
-- [🧠 New Topics Covered](#-new-topics-covered)
-- [📘 What I Learned](#-what-i-learned)
-- [🖼 Screenshots](#-screenshots)
+- 📌 [Summary](#-summary)
+- ⭐ [How It Works](#-how-it-works)
+- ✨ [Features](#-features)
+- 🧾 [File Layouts](#-file-layouts)
+- 🧰 [Tech Stack](#-tech-stack)
+- 🔧 [Development Tools](#-development-tools)
+- 🧩 [Core Concepts](#-core-concepts)
+- 📝 [New Topics Covered](#-new-topics-covered)
+- 📘 [What I Learned](#-what-i-learned)
+- 🖼 [Screenshots](#-screenshots)
 
 ---
 
@@ -35,17 +40,8 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 
 ---
 
-## ✨ Features
+## ⭐ How It Works
 
-- Demonstrates CRUD fuctions (create, read, update, delete) functions to update a file
-- Error handling and logging if errors occurs during file update
-- Conditional switches to control program flow
-- Fixed-block records for data
-- Record matching logic to properly match an old record with a transaction record
-- All features demonstated for both index and sequential files
----
-
-## How It Works
 ### Run with Sequential File Storage
 
 1. **Upload files**
@@ -89,9 +85,21 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 6. **Verify results**
    - Submit `JCLPVSAM.jcl` again
    - Review updated contents in SYSOUT
+   
 ---
 
-## File Layouts
+## ✨ Features
+
+- Demonstrates CRUD fuctions (create, read, update, delete) functions to update a file
+- Error handling and logging if errors occurs during file update
+- Conditional switches to control program flow
+- Fixed-block records for data
+- Record matching logic to properly match an old record with a transaction record
+- All features demonstated for both index and sequential files
+  
+---
+
+## 🧾 File Layouts
 
 ### 🧾 Old Master File Layout (EMPLOYEE-MASTER-RECORD)
 
@@ -140,25 +148,39 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 *Total Record Length: 57 bytes*
 
 ---
+
 ## 🧰 Tech Stack
+![COBOL](https://img.shields.io/badge/COBOL-Enterprise%206.4-blue?style=flat-square)
+![JCL](https://img.shields.io/badge/JCL-Batch%20Processing-grey?style=flat-square)
+![z/OS](https://img.shields.io/badge/IBM-z%2FOS-0f62fe?style=flat-square)
+![VS Code](https://img.shields.io/badge/VS%20Code-Zowe%20Explorer-007ACC?style=flat-square)
 
-- Enterprise COBOL 6.4 (Semantic Markup)
-- IBM z/OS mainframe for development and compiling
-- ZOWE Explorer Studio Code extension
-
-### 🛠 Development Tools
-- Marist z/OS Mainframe environment
-- Visual Studio Code with ZOWE Explorer extension
+- **Enterprise COBOL 6.4** – Core business logic  
+- **JCL** – Batch execution (compile/link/run)  
+- **IBM z/OS** – Mainframe runtime environment  
 
 ---
 
-## 🧠 New Topics Covered
+## 🔧 Development Tools
+- 💻 Visual Studio Code + Zowe Explorer  
+- 🖥️ IBM z/OS Mainframe  
+- 📂 Partitioned Datasets (PDS)
+
+---
+
+### 🧩 Core Concepts
+- Index file creation/management
+- Error logging/handling of index file management
+- Using a transaction file to update another file
+
+## 📝 New Topics Covered
 
 1. Adding, reading, updating, and delete records from a file
 2. How to perform error handling when manipulating a file
 3. FILE-STATUS statements for capturing error codes
 4. Creating COBOL and JCL files that create an index file from a sequential file
 5. Setting a lookup key to lookup records in an index file
+
 ---
 
 ## 📘 What I Learned
@@ -171,6 +193,7 @@ This project introduced me to the world of COBOL programs that update data conta
 ---
 
 ## 🖼 Screenshots
+
 ### Old Master File
 ![Old Master File](assets/old.png)
 
