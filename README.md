@@ -64,13 +64,14 @@ For full program details, refer to [Program Requirements](./assets/AssignmentIns
 
 ### Run with Indexed File Storage
 
-1. **Upload files**
+1. **Upload files to your Mainframe Enrironment**
    - All files from `using_sequential_files`
    - All files from `input_data`
 
-2. **Update file paths**
+2. **Update file paths/usernames**
    - Edit all JCL files
    - Update **DSN names** to match your environment
+   - Update **username** to match the proper user
 
 3. **Create indexed file**
    - Submit `JCLSEQI.jcl`
